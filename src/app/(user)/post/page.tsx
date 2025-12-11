@@ -14,6 +14,7 @@ export default function Page() {
   if (loading) return <p>กำลังโหลด...</p>;
   if (error) return <p>ผิดพลาด: {error}</p>;
 
+  
   return (
     <div>
       <h1>Posts</h1>
