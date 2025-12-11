@@ -1,18 +1,30 @@
-import axios from "axios";
+// src/app/(user)/post/page.tsx
+"use client";
 
+import { usePosts } from "@/store/posts";
+import { useEffect } from "react";
 
-type Post = { id: number; title: string };
+export default function Page() {
+  const { items, loading, error, fetchData } = usePosts();
 
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-export default async function PostsPage() { 
-	const res = await axios.get<Post[]>("https://jsonplaceholder.typicode.com/posts");
-	const posts = res.data; 
-	
-	return (
-		<div> <h1>Posts (Axios)</h1> <ul> 
-		{posts.slice(0, 5).map((p) => ( 
-		<li key={p.id}>{p.title}</li> ))} 
-		</ul> 
-		</div>
+  if (loading) return <p>กำลังโหลด...</p>;
+  if (error) return <p>ผิดพลาด: {error}</p>;
 
- ); }
+  return (
+    <div>
+      <h1>Posts</h1>
+      <ul>
+        {items.map((post) => (
+          <li key={post.id}>
+            <h2>{post.title}</h2>
+            <p>{post.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
