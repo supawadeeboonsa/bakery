@@ -1,31 +1,25 @@
-// src/app/(user)/post/page.tsx
-"use client";
+import axios from "axios";
 
-import { usePosts } from "@/store/posts";
-import { useEffect } from "react";
 
-export default function Page() {
-  const { items, loading, error, fetchData } = usePosts();
+type Post = { 
+    id: number
+    name: string;
+    price: number;
+    description: string;
+};
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
-  if (loading) return <p>กำลังโหลด...</p>;
-  if (error) return <p>ผิดพลาด: {error}</p>;
+export default async function PostsPage() { 
+	const res = await axios.get<Post[]>("http://localhost:3000/products");
+	const posts = res.data; 
+	
+	return (
 
-  
-  return (
-    <div>
-      <h1>Posts</h1>
-      <ul>
-        {items.map((post) => (
-          <li key={post.id}>
-            <h2>{post.title}</h2>
-            <p>{post.body}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+		<div> <h1>Posts (Axios)</h1> 
+      <ul> 
+		    {posts.slice(0, 5).map((p) => ( 
+		      <li key={p.id}>{p.name}{p.price}</li> ))} 
+		    </ul> 
+		</div>
+
+ ); }
